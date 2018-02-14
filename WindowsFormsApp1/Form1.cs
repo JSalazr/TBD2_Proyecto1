@@ -52,7 +52,6 @@ namespace WindowsFormsApp1
         {
             Form2 newConn = new Form2();
             newConn.Show();
-  
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -70,9 +69,74 @@ namespace WindowsFormsApp1
                     Globals.connection_string = "Driver=Adaptive Server Enterprise; Server=" + Globals.connections[a].server + ";Port=" + Globals.connections[a].port + ";database=" + Globals.connections[a].database + ";";
                     Form3 login = new Form3();
                     login.Show();
-                    this.Hide();
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Tablas tablas = new Tablas();
+            tablas.TopLevel = false;
+            tablas.AutoScroll = true;
+            tablas.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(tablas);
+            tablas.Show();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Views views = new Views();
+            views.TopLevel = false;
+            views.AutoScroll = true;
+            views.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(views);
+            views.Show();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Indexes indexes = new Indexes();
+            indexes.TopLevel = false;
+            indexes.AutoScroll = true;
+            indexes.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(indexes);
+            indexes.Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Procedures procedures = new Procedures();
+            procedures.TopLevel = false;
+            procedures.AutoScroll = true;
+            procedures.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(procedures);
+            procedures.Show();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Triggers triggers = new Triggers();
+            triggers.TopLevel = false;
+            triggers.AutoScroll = true;
+            triggers.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(triggers);
+            triggers.Show();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Checks checks = new Checks();
+            checks.TopLevel = false;
+            checks.AutoScroll = true;
+            checks.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(checks);
+            checks.Show();
         }
     }
 
@@ -80,6 +144,7 @@ namespace WindowsFormsApp1
     {
         public static ConnectionData[] connections = new ConnectionData[5];
         public static string connection_string;
+        public static string username;
 
         public static int pos;
 

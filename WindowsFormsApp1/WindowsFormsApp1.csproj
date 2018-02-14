@@ -60,6 +60,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Checks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Checks.Designer.cs">
+      <DependentUpon>Checks.cs</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="DataSet1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -84,11 +90,29 @@
     <Compile Include="Form3.Designer.cs">
       <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form4.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form4.Designer.cs">
+      <DependentUpon>Form4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Indexes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Indexes.Designer.cs">
+      <DependentUpon>Indexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Procedures.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Procedures.Designer.cs">
+      <DependentUpon>Procedures.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,6 +122,18 @@
     <Compile Include="Tablas.Designer.cs">
       <DependentUpon>Tablas.cs</DependentUpon>
     </Compile>
+    <Compile Include="Triggers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Triggers.Designer.cs">
+      <DependentUpon>Triggers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views.Designer.cs">
+      <DependentUpon>Views.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -106,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form4.resx">
+      <DependentUpon>Form4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
@@ -121,6 +160,9 @@
     </Compile>
     <EmbeddedResource Include="Tablas.resx">
       <DependentUpon>Tablas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views.resx">
+      <DependentUpon>Views.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="DataSet1.xsc">
       <DependentUpon>DataSet1.xsd</DependentUpon>

@@ -32,14 +32,17 @@ namespace WindowsFormsApp1
             {
                 conn.Open();
                 conn.Close();
-                Menu menu = new WindowsFormsApp1.Menu();
-                menu.Show();
             }
             catch (Exception)
             {
                 MessageBox.Show("No se pudo conectar a la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             this.Close();
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
