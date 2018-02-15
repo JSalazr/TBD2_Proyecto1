@@ -32,7 +32,7 @@ namespace WindowsFormsApp1
                     Globals.connections[c].server = br.ReadString();
                     Globals.connections[c].database = br.ReadString();
                     Globals.connections[c].port = br.ReadString();
-                    listBox1.Items.Add(Globals.connections[c].Tostring());
+                    treeView1.Nodes.Add(new TreeNode(Globals.connections[c].Tostring()));
                     c++;
                 }
             }
@@ -61,17 +61,85 @@ namespace WindowsFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string text = listBox1.GetItemText(listBox1.SelectedItem);
-            for (int a = 0; a < 5; a++)
+            if (treeView1.SelectedNode.Parent != null && treeView1.SelectedNode.Parent.Text == "Tables")
             {
-                if(Globals.connections[a].conn_name == text)
+                panel1.Controls.Clear();
+                Form6 tdata = new Form6(treeView1.SelectedNode.Text, treeView1.SelectedNode.Parent.Parent.Text);
+                tdata.TopLevel = false;
+                tdata.AutoScroll = true;
+                tdata.FormBorderStyle = FormBorderStyle.None;
+                panel1.Controls.Add(tdata);
+                tdata.Show();
+            }
+            else
+            {
+                string text = treeView1.SelectedNode.Text;
+                for (int a = 0; a < 5; a++)
                 {
-                    Globals.connection_string = "Driver=Adaptive Server Enterprise; Server=" + Globals.connections[a].server + ";Port=" + Globals.connections[a].port + ";database=" + Globals.connections[a].database + ";";
-                    Form3 login = new Form3();
-                    login.Show();
+                    if (Globals.connections[a].conn_name == text)
+                    {
+                        Globals.connection_string = "Driver=Adaptive Server Enterprise; Server=" + Globals.connections[a].server + ";Port=" + Globals.connections[a].port + ";";
+                        Form3 login = new Form3();
+                        login.ShowDialog();
+                        OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+                        conn.Open();
+                        OdbcCommand command = conn.CreateCommand();
+                        OdbcDataReader reader;
+                        command.CommandText = "select name from sysdatabases";
+                        reader = command.ExecuteReader();
+                        List<string> list = new List<string>();
+                        while (reader.Read())
+                        {
+                            list.Add(reader.GetString(0));
+                        }
+                        conn.Close();
+                        List<TreeNode> dbs = new List<TreeNode>();
+
+                        foreach (var db in list)
+                        {
+                            List<TreeNode> objects = new List<TreeNode>();
+                            List<TreeNode> tabs = new List<TreeNode>();
+                            string idk = Globals.connection_string + "database=" + db + ";";
+                            conn = new OdbcConnection(idk);
+                            try
+                            {
+                                conn.Open();
+                                command = conn.CreateCommand();
+                                command.CommandText = "select name from sysobjects where type = 'U' and uid = user_id()";
+                                reader = command.ExecuteReader();
+                                List<string> list1 = new List<string>();
+                                while (reader.Read())
+                                {
+                                    list1.Add(reader.GetString(0));
+                                }
+                                conn.Close();
+                                foreach (var tab in list1)
+                                {
+                                    tabs.Add(new TreeNode(tab));
+                                }
+                                objects.Add(new TreeNode("Tables", tabs.ToArray()));
+                                objects.Add(new TreeNode("Views"));
+                                objects.Add(new TreeNode("Indexes"));
+                                objects.Add(new TreeNode("Procedures"));
+                                objects.Add(new TreeNode("Triggers"));
+                                objects.Add(new TreeNode("Checks"));
+                                dbs.Add(new TreeNode(db, objects.ToArray()));
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+
+                        }
+                        treeView1.BeginUpdate();
+                        treeView1.SelectedNode.Remove();
+                        treeView1.Nodes.Add(new TreeNode(text, dbs.ToArray()));
+                        treeView1.EndUpdate();
+                    }
                 }
             }
         }
+
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -149,12 +217,14 @@ namespace WindowsFormsApp1
             panel1.Controls.Add(sql);
             sql.Show();
         }
+
     }
 
     public static class Globals
     {
         public static ConnectionData[] connections = new ConnectionData[5];
         public static string connection_string;
+
         public static string username;
 
         public static int pos;
