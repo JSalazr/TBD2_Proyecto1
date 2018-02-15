@@ -23,11 +23,11 @@ namespace WindowsFormsApp1
             OdbcConnection conn = new OdbcConnection(Globals.connection_string);
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Index_Name, c.name Type from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.indid != 0";
+            command.CommandText = "select a.name Index_Name, c.name Type from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join sysobjects d on a.id = d.id where a.indid != 0 and d.uid = user_id()";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Index_Name, c.name Type from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.indid != 0", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Index_Name, c.name Type from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join sysobjects d on a.id = d.id where a.indid != 0 and d.uid = user_id()", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);

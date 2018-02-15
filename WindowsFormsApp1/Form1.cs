@@ -138,6 +138,17 @@ namespace WindowsFormsApp1
             panel1.Controls.Add(checks);
             checks.Show();
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.Clear();
+            Form5 sql = new Form5();
+            sql.TopLevel = false;
+            sql.AutoScroll = true;
+            sql.FormBorderStyle = FormBorderStyle.None;
+            panel1.Controls.Add(sql);
+            sql.Show();
+        }
     }
 
     public static class Globals

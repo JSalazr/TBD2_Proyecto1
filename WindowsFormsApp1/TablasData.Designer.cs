@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApp1
 {
-    partial class Tablas
+    partial class TablasData
     {
         /// <summary>
         /// Required designer variable.

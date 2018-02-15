@@ -23,11 +23,11 @@ namespace WindowsFormsApp1
             OdbcConnection conn = new OdbcConnection(Globals.connection_string);
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Check_Name, c.name Table_with_check  from sysobjects a inner join sysconstraints b on a.id = b.constrid inner join sysobjects c on b.tableid = c.id where b.constrid != NULL";
+            command.CommandText = "select a.name Check_Name, c.name Table_with_check  from sysobjects a inner join sysconstraints b on a.id = b.constrid inner join sysobjects c on b.tableid = c.id";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Check_Name, c.name Table_with_check  from sysobjects a inner join sysconstraints b on a.id = b.constrid inner join sysobjects c on b.tableid = c.id where b.constrid != NULL", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Check_Name, c.name Table_with_check  from sysobjects a inner join sysconstraints b on a.id = b.constrid inner join sysobjects c on b.tableid = c.id", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);

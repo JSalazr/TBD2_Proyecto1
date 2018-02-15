@@ -12,14 +12,14 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class Tablas : Form
+    public partial class TablasData : Form
     {
         OdbcDataReader reader;
         OdbcDataAdapter adapter;
         DataTable table;
         string column_name;
         string table_name;
-        public Tablas()
+        public TablasData()
         {
             InitializeComponent();
             OdbcConnection conn = new OdbcConnection(Globals.connection_string);
@@ -46,7 +46,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void Tablas_Load(object sender, EventArgs e)
+        private void TablasData_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'dataSet1.spt_jdbc_table_types' table. You can move, or remove it, as needed.
             this.spt_jdbc_table_typesTableAdapter.Fill(this.dataSet1.spt_jdbc_table_types);

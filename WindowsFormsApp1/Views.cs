@@ -17,17 +17,18 @@ namespace WindowsFormsApp1
         OdbcDataReader reader;
         OdbcDataAdapter adapter;
         DataTable table;
+        string view_name;
         public Views()
         {
             InitializeComponent();
             OdbcConnection conn = new OdbcConnection(Globals.connection_string);
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.type = 'V'";
+            command.CommandText = "select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.type = 'V' and a.uid = user_id()";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.type = 'V'", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.type = 'V' and a.uid = user_id()", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);
@@ -44,12 +45,33 @@ namespace WindowsFormsApp1
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            Console.WriteLine(dataGridView1.CurrentRow.ToString());
+            
+        }
+
+        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            view_name = e.Row.Cells["Table_Name"].Value.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             adapter.Update(table);
+        }
+
+        private void Views_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            conn.Open();
+
+            adapter.DeleteCommand = new OdbcCommand("drop view " + view_name, conn);
+            adapter.Update(table);
+            table.AcceptChanges();
+            conn.Close();
         }
     }
 }
