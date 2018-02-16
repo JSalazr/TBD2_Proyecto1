@@ -17,10 +17,10 @@ namespace WindowsFormsApp1
         OdbcDataReader reader;
         OdbcDataAdapter adapter;
         DataTable table;
-        public Checks()
+        public Checks(string database)
         {
             InitializeComponent();
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
             command.CommandText = "select a.name Check_Name, c.name Table_with_check  from sysobjects a inner join sysconstraints b on a.id = b.constrid inner join sysobjects c on b.tableid = c.id";

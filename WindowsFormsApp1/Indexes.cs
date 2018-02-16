@@ -17,17 +17,18 @@ namespace WindowsFormsApp1
         OdbcDataReader reader;
         OdbcDataAdapter adapter;
         DataTable table;
-        public Indexes()
+        string index_name;
+        public Indexes(string database)
         {
             InitializeComponent();
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Index_Name, c.name Type from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join sysobjects d on a.id = d.id where a.indid != 0 and d.uid = user_id()";
+            command.CommandText = "select a.name Index_Name, c.name Type, e.text from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join sysobjects d on a.id = d.id inner join syscomments e on a.id = e.id where a.indid != 0 and d.uid = user_id()";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Index_Name, c.name Type from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join sysobjects d on a.id = d.id where a.indid != 0 and d.uid = user_id()", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Index_Name, c.name Type, e.text from sysindexes a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join sysobjects d on a.id = d.id inner join syscomments e on a.id = e.id where a.indid != 0 and d.uid = user_id()", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);

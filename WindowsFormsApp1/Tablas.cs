@@ -19,10 +19,12 @@ namespace WindowsFormsApp1
         DataTable table;
         string column_name;
         string table_name;
-        public Tablas()
+        string database;
+        public Tablas(string database)
         {
             InitializeComponent();
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            this.database = database;
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             try
             {
                 conn.Open();
@@ -72,7 +74,7 @@ namespace WindowsFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
            
             adapter.DeleteCommand = new OdbcCommand("drop table " + table_name, conn);
@@ -83,7 +85,7 @@ namespace WindowsFormsApp1
 
         private void button3_Click(object sender, EventArgs e)
         {
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
 
             adapter.DeleteCommand = new OdbcCommand("alter table " + table_name + " drop " + column_name + " with no datacopy", conn);
@@ -94,7 +96,7 @@ namespace WindowsFormsApp1
 
         private void button5_Click(object sender, EventArgs e)
         {
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
 
             adapter.UpdateCommand = new OdbcCommand("alter table " + dataGridView1.CurrentRow.Cells["Table_Name"].Value.ToString() + " modify " + dataGridView1.CurrentRow.Cells["Column_Name"].Value.ToString() + " " + dataGridView1.CurrentRow.Cells["Type"].Value.ToString(), conn);
@@ -105,7 +107,7 @@ namespace WindowsFormsApp1
 
         private void button4_Click(object sender, EventArgs e)
         {
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
 
             adapter.UpdateCommand = new OdbcCommand("alter table " + dataGridView1.CurrentRow.Cells["Table_Name"].Value.ToString() + " modify " + dataGridView1.CurrentRow.Cells["Column_Name"].Value.ToString() + " " + dataGridView1.CurrentRow.Cells["Type"].Value.ToString(), conn);

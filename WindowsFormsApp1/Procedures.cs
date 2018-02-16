@@ -17,17 +17,20 @@ namespace WindowsFormsApp1
         OdbcDataReader reader;
         OdbcDataAdapter adapter;
         DataTable table;
-        public Procedures()
+        string procedure_name;
+        string database;
+        public Procedures(string database)
         {
             InitializeComponent();
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            this.database = database;
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Name from sysobjects a where a.type = 'P' or a.type = 'SF' or a.type = 'XP'";
+            command.CommandText = "select a.name Name, b.text DDL from sysobjects a inner join syscomments b on a.id = b.id where a.type = 'P' or a.type = 'SF' or a.type = 'XP' and a.uid = user_id()";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Name from sysobjects a where a.type = 'P' or a.type = 'SF' or a.type = 'XP'", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Name, b.text DDL from sysobjects a inner join syscomments b on a.id = b.id where a.type = 'P' or a.type = 'SF' or a.type = 'XP' and a.uid = user_id()", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);
@@ -42,6 +45,11 @@ namespace WindowsFormsApp1
 
         }
 
+        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            procedure_name = e.Row.Cells["Name"].Value.ToString();
+        }
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine(dataGridView1.CurrentRow.ToString());
@@ -50,6 +58,17 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             adapter.Update(table);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
+            conn.Open();
+
+            adapter.DeleteCommand = new OdbcCommand("drop procedure " + procedure_name, conn);
+            adapter.Update(table);
+            table.AcceptChanges();
+            conn.Close();
         }
     }
 }

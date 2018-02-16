@@ -140,6 +140,7 @@
             this.textpass.Name = "textpass";
             this.textpass.Size = new System.Drawing.Size(192, 20);
             this.textpass.TabIndex = 10;
+            this.textpass.PasswordChar = '*';
             // 
             // button1
             // 

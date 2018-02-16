@@ -114,12 +114,6 @@
     <Compile Include="Indexes.Designer.cs">
       <DependentUpon>Indexes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Menu.Designer.cs">
-      <DependentUpon>Menu.cs</DependentUpon>
-    </Compile>
     <Compile Include="Procedures.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,8 +161,8 @@
     <EmbeddedResource Include="Indexes.resx">
       <DependentUpon>Indexes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Menu.resx">
-      <DependentUpon>Menu.cs</DependentUpon>
+    <EmbeddedResource Include="Procedures.resx">
+      <DependentUpon>Procedures.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -181,6 +175,9 @@
     </Compile>
     <EmbeddedResource Include="Tablas.resx">
       <DependentUpon>Tablas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Triggers.resx">
+      <DependentUpon>Triggers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views.resx">
       <DependentUpon>Views.cs</DependentUpon>

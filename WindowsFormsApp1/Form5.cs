@@ -25,6 +25,16 @@ namespace WindowsFormsApp1
             try
             {
                 conn.Open();
+                OdbcCommand command = conn.CreateCommand();
+                OdbcDataReader reader;
+                command.CommandText = "select name from sysdatabases";
+                reader = command.ExecuteReader();
+                List<string> list = new List<string>();
+                while (reader.Read())
+                {
+                    list.Add(reader.GetString(0));
+                }
+                comboBox1.DataSource = list;
                 conn.Close();
 
             }
@@ -37,7 +47,7 @@ namespace WindowsFormsApp1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string+";database="+comboBox1.Text);
             sql_command = textBox1.Text;
             conn.Open();
             if (sql_command.StartsWith("select"))
@@ -56,6 +66,16 @@ namespace WindowsFormsApp1
                 reader = command.ExecuteReader();
             }
             conn.Close();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form5_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

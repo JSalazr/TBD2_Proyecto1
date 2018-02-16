@@ -15,9 +15,25 @@ namespace WindowsFormsApp1
 {
     public partial class Form2 : Form
     {
-        public Form2()
+        string curr_con;
+        public Form2(string con_to_edit)
         {
             InitializeComponent();
+            curr_con = con_to_edit;
+            if (curr_con != "null")
+            {
+                foreach (var con in Globals.connections)
+                {
+                    if (con.conn_name == curr_con)
+                    {
+                        textconn.Text = con.conn_name;
+                        textserver.Text = con.server;
+                        textdb.Text = con.database;
+                        textport.Text = con.port;
+                        break;
+                    }
+                }
+            }
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -48,33 +64,62 @@ namespace WindowsFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int curr_pos = Globals.get_pos();
-            Globals.connections[curr_pos] = new ConnectionData();
-            Globals.connections[curr_pos].conn_name = textconn.Text;
-            Globals.connections[curr_pos].server = textserver.Text;
-            Globals.connections[curr_pos].database = textdb.Text;
-            Globals.connections[curr_pos].port = textport.Text;
-            using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.Append)))
+            if(curr_con != "null")
             {
-                bw.Write(Globals.connections[curr_pos].conn_name);
-                bw.Write(Globals.connections[curr_pos].server);
-                bw.Write(Globals.connections[curr_pos].database);
-                bw.Write(Globals.connections[curr_pos].port);
+                foreach (var con in Globals.connections)
+                {
+                    if (con.conn_name == curr_con)
+                    {
+                        con.conn_name = textconn.Text;
+                        con.server = textserver.Text;
+                        con.database = textdb.Text;
+                        con.port = textport.Text;
+                        break;
+                    }
+                }
+                using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.OpenOrCreate)))
+                {
+                    foreach (var con in Globals.connections)
+                    {
+                        bw.Write(con.conn_name);
+                        bw.Write(con.server);
+                        bw.Write(con.database);
+                        bw.Write(con.port);
+                    }
+                }
+                this.Close();
             }
-            Globals.connection_string = "Driver=Adaptive Server Enterprise; Server=" + textserver.Text + ";uid=" + textuser.Text + ";pwd=" + textpass.Text + ";Port=" + textport.Text + ";database=" + textdb.Text + ";";
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
-            try
+            else
             {
-                conn.Open();
-                conn.Close();
-                Menu menu = new WindowsFormsApp1.Menu();
-                menu.Show();
+                ConnectionData temp = new ConnectionData();
+                temp.conn_name = textconn.Text;
+                temp.server = textserver.Text;
+                temp.database = textdb.Text;
+                temp.port = textport.Text;
+                Globals.connections.Add(temp);
+                using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.OpenOrCreate)))
+                {
+                    foreach (var con in Globals.connections)
+                    {
+                        bw.Write(con.conn_name);
+                        bw.Write(con.server);
+                        bw.Write(con.database);
+                        bw.Write(con.port);
+                    }
+                }
+                Globals.connection_string = "Driver=Adaptive Server Enterprise; Server=" + textserver.Text + ";uid=" + textuser.Text + ";pwd=" + textpass.Text + ";Port=" + textport.Text + ";";
+                OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+                try
+                {
+                    conn.Open();
+                    conn.Close();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("No se pudo conectar a la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                this.Close();
             }
-            catch (Exception)
-            {
-                MessageBox.Show("No se pudo conectar a la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            this.Close();
         }
     }
 }

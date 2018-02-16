@@ -18,17 +18,17 @@ namespace WindowsFormsApp1
         OdbcDataAdapter adapter;
         DataTable table;
         string view_name;
-        public Views()
+        public Views(string database)
         {
             InitializeComponent();
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.type = 'V' and a.uid = user_id()";
+            command.CommandText = "select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length, d.text DDL from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join syscomments d on a.id = d.id where a.type = 'V' and a.uid = user_id()";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type where a.type = 'V' and a.uid = user_id()", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Table_Name, b.name Column_Name, c.name Type, b.length Length, d.text DDL from sysobjects a inner join syscolumns b on a.id = b.id inner join systypes c on b.type = c.type inner join syscomments d on a.id = d.id where a.type = 'V' and a.uid = user_id()", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);

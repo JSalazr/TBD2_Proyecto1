@@ -17,17 +17,20 @@ namespace WindowsFormsApp1
         OdbcDataReader reader;
         OdbcDataAdapter adapter;
         DataTable table;
-        public Triggers()
+        string database;
+        string trigger_name;
+        public Triggers(string database)
         {
             InitializeComponent();
-            OdbcConnection conn = new OdbcConnection(Globals.connection_string);
+            this.database = database;
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
             conn.Open();
             OdbcCommand command = conn.CreateCommand();
-            command.CommandText = "select a.name Trigger_Name, c.name Dependant_Name from sysobjects a inner join sysdepends b on a.id = b.id inner join sysobjects c on b.depid = c.id where a.type = 'TR'";
+            command.CommandText = "select a.name Trigger_Name, c.name Dependant_Name, d.text DDL from sysobjects a inner join sysdepends b on a.id = b.id inner join sysobjects c on b.depid = c.id inner join syscomments d on a.id = d.id where a.type = 'TR' and a.uid = user_id()";
             reader = command.ExecuteReader();
             table = new DataTable();
             adapter = new OdbcDataAdapter();
-            OdbcCommand selectCMD = new OdbcCommand("select a.name Trigger_Name, c.name Dependant_Name from sysobjects a inner join sysdepends b on a.id = b.id inner join sysobjects c on b.depid = c.id where a.type = 'TR'", conn);
+            OdbcCommand selectCMD = new OdbcCommand("select a.name Trigger_Name, c.name Dependant_Name, d.text DDL from sysobjects a inner join sysdepends b on a.id = b.id inner join sysobjects c on b.depid = c.id inner join syscomments d on a.id = d.id where a.type = 'TR' and a.uid = user_id()", conn);
             adapter.SelectCommand = selectCMD;
             OdbcCommand UpdateCMD = new OdbcCommand("", conn);
             adapter.Fill(table);
@@ -42,6 +45,11 @@ namespace WindowsFormsApp1
 
         }
 
+        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            trigger_name = e.Row.Cells["Trigger_Name"].Value.ToString();
+        }
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine(dataGridView1.CurrentRow.ToString());
@@ -50,6 +58,17 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             adapter.Update(table);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OdbcConnection conn = new OdbcConnection(Globals.connection_string + "database=" + database + ";");
+            conn.Open();
+
+            adapter.DeleteCommand = new OdbcCommand("drop trigger " + trigger_name, conn);
+            adapter.Update(table);
+            table.AcceptChanges();
+            conn.Close();
         }
     }
 }
