@@ -18,6 +18,17 @@ namespace WindowsFormsApp1
         public Form1()
         {   
             InitializeComponent();
+            load_treeView();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void load_treeView()
+        {
+            Globals.connections = new List<ConnectionData>();
             using (BinaryReader br = new BinaryReader(File.Open("connections.cn", FileMode.OpenOrCreate)))
             {
                 while (br.BaseStream.Position != br.BaseStream.Length)
@@ -31,11 +42,6 @@ namespace WindowsFormsApp1
                     treeView1.Nodes.Add(new TreeNode(temp.Tostring()));
                 }
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -240,7 +246,11 @@ namespace WindowsFormsApp1
         private void button3_Click_1(object sender, EventArgs e)
         {
             Form2 edit = new Form2(treeView1.SelectedNode.Text);
-            edit.Show();
+            edit.ShowDialog();
+            treeView1.BeginUpdate();
+            treeView1.Nodes.Clear();
+            load_treeView();
+            treeView1.EndUpdate();
         }
 
         private void button4_Click_1(object sender, EventArgs e)
@@ -263,6 +273,10 @@ namespace WindowsFormsApp1
                     bw.Write(con.port);
                 }
             }
+            treeView1.BeginUpdate();
+            treeView1.Nodes.Clear();
+            load_treeView();
+            treeView1.EndUpdate();
         }
     }
 

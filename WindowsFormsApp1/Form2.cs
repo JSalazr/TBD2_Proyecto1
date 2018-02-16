@@ -77,7 +77,7 @@ namespace WindowsFormsApp1
                         break;
                     }
                 }
-                using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.OpenOrCreate)))
+                using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.Create)))
                 {
                     foreach (var con in Globals.connections)
                     {
@@ -97,7 +97,7 @@ namespace WindowsFormsApp1
                 temp.database = textdb.Text;
                 temp.port = textport.Text;
                 Globals.connections.Add(temp);
-                using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.OpenOrCreate)))
+                using (BinaryWriter bw = new BinaryWriter(File.Open("connections.cn", FileMode.Create)))
                 {
                     foreach (var con in Globals.connections)
                     {
